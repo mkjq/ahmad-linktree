@@ -57,6 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
         initDashboard();
     }
 
+    function reloadPreview() {
+        const iframe = document.getElementById('preview-iframe');
+        if (iframe) {
+            iframe.src = iframe.src;
+        }
+    }
+
     // --- Toast Notifications ---
     function showToast(message, type = 'info') {
         const container = document.getElementById('toast-container');
@@ -74,6 +81,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Trigger animation
         setTimeout(() => toast.classList.add('show'), 10);
+        
+        if (message.includes('تم') || type === 'success') {
+            reloadPreview();
+        }
         
         // Remove after 3s
         setTimeout(() => {
@@ -94,6 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function initDashboard() {
         initNavigation();
         loadProfile();
+        
+        const btnRefresh = document.getElementById('btn-refresh-preview');
+        if (btnRefresh) {
+            btnRefresh.addEventListener('click', reloadPreview);
+        }
         loadLinks();
         loadGallery();
         loadVideos();
@@ -133,6 +149,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if(mobileToggle) {
             mobileToggle.addEventListener('click', () => {
                 sidebar.classList.toggle('open');
+            });
+        }
+        
+        const previewToggle = document.getElementById('mobile-preview-toggle');
+        const previewPane = document.getElementById('preview-pane');
+        if (previewToggle && previewPane) {
+            previewToggle.addEventListener('click', () => {
+                previewPane.classList.toggle('open');
+            });
+            
+            previewPane.addEventListener('click', (e) => {
+                if (e.target === previewPane) {
+                    previewPane.classList.remove('open');
+                }
             });
         }
     }
@@ -270,6 +300,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('link-icon').value = link ? link.icon : 'fas fa-link';
         document.getElementById('link-color').value = link && link.color ? link.color : '#ffffff';
         document.getElementById('link-modal').classList.add('active');
+        
+        if (!window.quickIconsBound) {
+            document.querySelectorAll('.quick-icon-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('link-icon').value = btn.getAttribute('data-icon');
+                    document.getElementById('link-color').value = btn.getAttribute('data-color');
+                });
+            });
+            window.quickIconsBound = true;
+        }
     }
 
     // --- Gallery Section ---
@@ -389,6 +429,79 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Theme Section ---
     function loadTheme() {
+        const presets = {
+            'blood': {
+                primary: '#dc2626', secondary: '#991b1b', 
+                bgValue: 'linear-gradient(135deg, #0f0000 0%, #320000 100%)',
+                font: 'Tajawal', effect: 'blood', animation: 'glow-pulse'
+            },
+            'neon': {
+                primary: '#ec4899', secondary: '#8b5cf6', 
+                bgValue: 'linear-gradient(135deg, #0f0728 0%, #1e0b36 100%)',
+                font: 'Orbitron', effect: 'neon', animation: 'glow-pulse'
+            },
+            'gold': {
+                primary: '#eab308', secondary: '#ca8a04', 
+                bgValue: 'linear-gradient(135deg, #0f0d05 0%, #1c1808 100%)',
+                font: 'Righteous', effect: 'gold', animation: 'float'
+            },
+            'space': {
+                primary: '#3b82f6', secondary: '#8b5cf6', 
+                bgValue: 'linear-gradient(135deg, #050b14 0%, #0a192f 100%)',
+                font: 'Poppins', effect: 'galaxy', animation: 'float'
+            },
+            'ice': {
+                primary: '#06b6d4', secondary: '#3b82f6', 
+                bgValue: 'linear-gradient(135deg, #03131a 0%, #0a2533 100%)',
+                font: 'Montserrat', effect: 'ice', animation: 'none'
+            }
+        };
+
+        document.querySelectorAll('.preset-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const p = presets[card.getAttribute('data-preset')];
+                if (p) {
+                    storage.updateTheme({
+                        primaryColor: p.primary,
+                        secondaryColor: p.secondary,
+                        cardBg: '#16161f',
+                        textColor: '#e2e8f0',
+                        borderRadius: '16px',
+                        glowEffect: true
+                    });
+                    document.getElementById('theme-primary').value = p.primary;
+                    document.getElementById('theme-secondary').value = p.secondary;
+                    
+                    storage.updateBackground({
+                        type: 'gradient',
+                        value: p.bgValue,
+                        overlay: '0.5',
+                        blur: '0'
+                    });
+                    
+                    storage.updateNameStyle({
+                        font: p.font,
+                        effect: p.effect,
+                        gradientColors: [p.primary, p.secondary, '#ffffff'],
+                        gradientAngle: 135,
+                        fontSize: '2.5rem',
+                        fontWeight: '800',
+                        letterSpacing: '2px',
+                        animation: p.animation
+                    });
+                    
+                    showToast('تم تطبيق القالب بنجاح!', 'success');
+                    
+                    if (document.getElementById('ns-font')) {
+                        document.getElementById('ns-font').value = p.font;
+                        document.getElementById('ns-effect').value = p.effect;
+                        document.getElementById('ns-animation').value = p.animation;
+                        if(typeof updateNamePreview === 'function') updateNamePreview();
+                    }
+                }
+            });
+        });
+
         const t = storage.getTheme();
         document.getElementById('theme-primary').value = t.primaryColor;
         document.getElementById('theme-secondary').value = t.secondaryColor;

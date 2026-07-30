@@ -70,9 +70,10 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <button class="mobile-nav-toggle" id="mobile-nav-toggle">
-                <i class="fas fa-bars"></i>
-            </button>
+            <div class="top-bar">
+                <button class="mobile-nav-toggle" id="mobile-nav-toggle"><i class="fas fa-bars"></i> القائمة</button>
+                <button class="btn btn-sm btn-primary" id="mobile-preview-toggle"><i class="fas fa-mobile-alt"></i> معاينة مباشرة</button>
+            </div>
 
             <!-- Profile Section -->
             <section id="sec-profile" class="section active">
@@ -381,6 +382,36 @@
                     <h2>الثيم والألوان</h2>
                 </div>
                 <div class="panel">
+                    <div class="presets-container" style="margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--admin-primary);"><i class="fas fa-magic"></i> قوالب وثيمات جاهزة بنقرة واحدة</h3>
+                        <div class="presets-grid">
+                            <div class="preset-card" data-preset="blood">
+                                <div class="preset-preview blood-bg">🩸</div>
+                                <h4>الدموي (Blood)</h4>
+                                <p>أحمر داكن مع إضاءة دموية</p>
+                            </div>
+                            <div class="preset-card" data-preset="neon">
+                                <div class="preset-preview neon-bg">💡</div>
+                                <h4>النيون (Cyber Neon)</h4>
+                                <p>توهج سايبر بنفسجي ووردي</p>
+                            </div>
+                            <div class="preset-card" data-preset="gold">
+                                <div class="preset-preview gold-bg">👑</div>
+                                <h4>الملكي (Royal Gold)</h4>
+                                <p>أسود فاخر مع بريق ذهبي</p>
+                            </div>
+                            <div class="preset-card" data-preset="space">
+                                <div class="preset-preview space-bg">🌌</div>
+                                <h4>المجرة (Deep Space)</h4>
+                                <p>ألوان الفضاء الكونية</p>
+                            </div>
+                            <div class="preset-card" data-preset="ice">
+                                <div class="preset-preview ice-bg">❄️</div>
+                                <h4>الجليدي (Frozen Ice)</h4>
+                                <p>سماوي بارد وكريستالي</p>
+                            </div>
+                        </div>
+                    </div>
                     <form id="theme-form">
                         <div class="form-grid">
                             <div class="input-group">
@@ -486,6 +517,18 @@
                 </div>
             </section>
         </main>
+
+        <!-- Live Phone Preview Pane -->
+        <aside class="preview-pane" id="preview-pane">
+            <div class="phone-frame">
+                <div class="phone-notch"></div>
+                <iframe id="preview-iframe" src="../index.html"></iframe>
+            </div>
+            <div class="preview-controls">
+                <button class="btn btn-sm btn-outline" id="btn-refresh-preview" title="تحديث المعاينة"><i class="fas fa-sync-alt"></i> تحديث</button>
+                <a href="../index.html" target="_blank" class="btn btn-sm btn-outline"><i class="fas fa-external-link-alt"></i> فتح في نافذة مستقلة</a>
+            </div>
+        </aside>
     </div>
 
     <!-- Modals -->
@@ -509,6 +552,21 @@
                     <small style="color: var(--admin-text-secondary); display:block; margin-top:5px;">
                         أمثلة: fab fa-instagram, fab fa-x-twitter, fab fa-youtube, fab fa-whatsapp, fas fa-globe
                     </small>
+                </div>
+                <div class="input-group">
+                    <label>اختر أيقونة سريعة</label>
+                    <div class="quick-icons-grid">
+                        <button type="button" class="quick-icon-btn" data-icon="fab fa-instagram" data-color="#E4405F"><i class="fab fa-instagram"></i></button>
+                        <button type="button" class="quick-icon-btn" data-icon="fab fa-tiktok" data-color="#ff0050"><i class="fab fa-tiktok"></i></button>
+                        <button type="button" class="quick-icon-btn" data-icon="fab fa-youtube" data-color="#FF0000"><i class="fab fa-youtube"></i></button>
+                        <button type="button" class="quick-icon-btn" data-icon="fab fa-snapchat" data-color="#FFFC00"><i class="fab fa-snapchat"></i></button>
+                        <button type="button" class="quick-icon-btn" data-icon="fab fa-x-twitter" data-color="#1DA1F2"><i class="fab fa-x-twitter"></i></button>
+                        <button type="button" class="quick-icon-btn" data-icon="fab fa-whatsapp" data-color="#25D366"><i class="fab fa-whatsapp"></i></button>
+                        <button type="button" class="quick-icon-btn" data-icon="fab fa-discord" data-color="#5865F2"><i class="fab fa-discord"></i></button>
+                        <button type="button" class="quick-icon-btn" data-icon="fab fa-telegram" data-color="#0088cc"><i class="fab fa-telegram"></i></button>
+                        <button type="button" class="quick-icon-btn" data-icon="fab fa-github" data-color="#ffffff"><i class="fab fa-github"></i></button>
+                        <button type="button" class="quick-icon-btn" data-icon="fas fa-globe" data-color="#06b6d4"><i class="fas fa-globe"></i></button>
+                    </div>
                 </div>
                 <div class="input-group">
                     <label>لون الأيقونة</label>
