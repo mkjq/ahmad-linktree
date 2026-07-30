@@ -17,6 +17,8 @@ function initApp() {
     loadProfile();
     applySections();
     loadLinks();
+    applyNameStyle();
+    loadDecorations();
     loadGallery();
     loadVideos();
     initParticles();
@@ -85,6 +87,108 @@ function loadProfile() {
         if (galleryTitle && sections.galleryTitle) galleryTitle.textContent = sections.galleryTitle;
         if (videosTitle && sections.videosTitle) videosTitle.textContent = sections.videosTitle;
     }
+}
+
+function applyNameStyle() {
+    if (!storage.getNameStyle) return;
+    const ns = storage.getNameStyle();
+    const nameEl = document.getElementById('profile-name');
+    if (!nameEl || !ns) return;
+
+    // Load custom Google Font
+    if (ns.font) {
+        const fontLink = document.createElement('link');
+        fontLink.href = `https://fonts.googleapis.com/css2?family=${ns.font.replace(/ /g, '+')}:wght@400;500;600;700;800;900&display=swap`;
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
+        nameEl.style.fontFamily = `'${ns.font}', sans-serif`;
+    }
+
+    // Apply size, weight, spacing
+    if (ns.fontSize) nameEl.style.fontSize = ns.fontSize;
+    if (ns.fontWeight) nameEl.style.fontWeight = ns.fontWeight;
+    if (ns.letterSpacing) nameEl.style.letterSpacing = ns.letterSpacing;
+
+    // Set data attribute for glitch effect
+    nameEl.setAttribute('data-text', nameEl.textContent);
+
+    // Remove default gradient styling from CSS
+    nameEl.style.background = 'none';
+    nameEl.style.webkitBackgroundClip = 'unset';
+    nameEl.style.webkitTextFillColor = 'unset';
+
+    // Set color custom properties
+    if (ns.gradientColors) {
+        nameEl.style.setProperty('--name-color-1', ns.gradientColors[0] || '#7c3aed');
+        nameEl.style.setProperty('--name-color-2', ns.gradientColors[1] || '#a855f7');
+        nameEl.style.setProperty('--name-color-3', ns.gradientColors[2] || '#06b6d4');
+    }
+
+    // Apply effect class
+    const effect = ns.effect || 'gradient';
+    if (effect !== 'none') {
+        nameEl.classList.add(`name-${effect}`);
+    }
+
+    // For gradient, apply custom gradient
+    if (effect === 'gradient' && ns.gradientColors) {
+        const angle = ns.gradientAngle || 135;
+        const colors = ns.gradientColors;
+        nameEl.style.background = `linear-gradient(${angle}deg, ${colors[0]}, ${colors[1]}, ${colors[2]})`;
+        nameEl.style.webkitBackgroundClip = 'text';
+        nameEl.style.webkitTextFillColor = 'transparent';
+        nameEl.style.backgroundClip = 'text';
+    }
+
+    // Apply text animation
+    if (ns.animation && ns.animation !== 'none') {
+        nameEl.classList.add(`name-anim-${ns.animation}`);
+    }
+
+    // Apply text shadow
+    if (ns.textShadowColor && ns.textShadowBlur) {
+        nameEl.style.textShadow = `0 0 ${ns.textShadowBlur} ${ns.textShadowColor}`;
+    }
+}
+
+function loadDecorations() {
+    if (!storage.getDecorations) return;
+    const decos = storage.getDecorations();
+    if (!decos || decos.length === 0) return;
+
+    // Remove existing decorations
+    document.querySelectorAll('.decoration-element').forEach(el => el.remove());
+
+    decos.forEach(deco => {
+        const el = document.createElement('div');
+        el.className = 'decoration-element';
+        el.style.left = deco.x + '%';
+        el.style.top = deco.y + '%';
+        el.style.fontSize = deco.size + 'px';
+        el.style.color = deco.color || '#a855f7';
+        el.style.opacity = deco.opacity || 0.7;
+        el.style.transform = `rotate(${deco.rotation || 0}deg)`;
+
+        // Content based on type
+        if (deco.type === 'icon') {
+            el.innerHTML = `<i class="${deco.content}"></i>`;
+        } else if (deco.type === 'emoji') {
+            el.textContent = deco.content;
+        } else if (deco.type === 'text') {
+            el.textContent = deco.content;
+        } else if (deco.type === 'image') {
+            el.style.width = deco.size + 'px';
+            el.style.height = deco.size + 'px';
+            el.innerHTML = `<img src="${deco.content}" alt="decoration">`;
+        }
+
+        // Animation
+        if (deco.animation && deco.animation !== 'none') {
+            el.classList.add(`deco-anim-${deco.animation}`);
+        }
+
+        document.body.appendChild(el);
+    });
 }
 
 function applySections() {

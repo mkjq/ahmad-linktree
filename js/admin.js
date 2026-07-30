@@ -99,6 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
         loadVideos();
         loadBackground();
         loadTheme();
+        loadNameStyle();
+        loadDecorations();
         loadSettings();
     }
 
@@ -407,6 +409,166 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             showToast('تم حفظ الثيم', 'success');
         };
+    }
+
+    // --- Name Style Section ---
+    function loadNameStyle() {
+        const ns = storage.getNameStyle();
+        if (!ns) return;
+        
+        document.getElementById('ns-font').value = ns.font || 'Tajawal';
+        document.getElementById('ns-effect').value = ns.effect || 'gradient';
+        document.getElementById('ns-color1').value = ns.gradientColors?.[0] || '#7c3aed';
+        document.getElementById('ns-color2').value = ns.gradientColors?.[1] || '#a855f7';
+        document.getElementById('ns-color3').value = ns.gradientColors?.[2] || '#06b6d4';
+        document.getElementById('ns-size').value = ns.fontSize || '2.5rem';
+        document.getElementById('ns-weight').value = ns.fontWeight || '800';
+        document.getElementById('ns-spacing').value = ns.letterSpacing || '2px';
+        document.getElementById('ns-animation').value = ns.animation || 'none';
+        document.getElementById('ns-angle').value = ns.gradientAngle || 135;
+        document.getElementById('ns-angle-val').textContent = (ns.gradientAngle || 135) + '°';
+
+        // Angle slider live update
+        document.getElementById('ns-angle').addEventListener('input', function() {
+            document.getElementById('ns-angle-val').textContent = this.value + '°';
+            updateNamePreview();
+        });
+
+        // Live preview on change
+        ['ns-font', 'ns-effect', 'ns-color1', 'ns-color2', 'ns-color3', 'ns-size', 'ns-weight', 'ns-spacing', 'ns-animation'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateNamePreview);
+            document.getElementById(id).addEventListener('change', updateNamePreview);
+        });
+
+        updateNamePreview();
+
+        document.getElementById('namestyle-form').onsubmit = (e) => {
+            e.preventDefault();
+            storage.updateNameStyle({
+                font: document.getElementById('ns-font').value,
+                effect: document.getElementById('ns-effect').value,
+                gradientColors: [
+                    document.getElementById('ns-color1').value,
+                    document.getElementById('ns-color2').value,
+                    document.getElementById('ns-color3').value
+                ],
+                gradientAngle: parseInt(document.getElementById('ns-angle').value),
+                fontSize: document.getElementById('ns-size').value,
+                fontWeight: document.getElementById('ns-weight').value,
+                letterSpacing: document.getElementById('ns-spacing').value,
+                animation: document.getElementById('ns-animation').value
+            });
+            showToast('تم حفظ تخصيص الاسم', 'success');
+        };
+    }
+
+    function updateNamePreview() {
+        const preview = document.getElementById('ns-preview-text');
+        if (!preview) return;
+        const font = document.getElementById('ns-font').value;
+        const effect = document.getElementById('ns-effect').value;
+        const c1 = document.getElementById('ns-color1').value;
+        const c2 = document.getElementById('ns-color2').value;
+        const c3 = document.getElementById('ns-color3').value;
+        const size = document.getElementById('ns-size').value;
+        const weight = document.getElementById('ns-weight').value;
+        const spacing = document.getElementById('ns-spacing').value;
+        const angle = document.getElementById('ns-angle').value;
+
+        // Load font dynamically
+        const link = document.createElement('link');
+        link.href = `https://fonts.googleapis.com/css2?family=${font.replace(/ /g, '+')}:wght@400;500;600;700;800;900&display=swap`;
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+
+        preview.style.fontFamily = `'${font}', sans-serif`;
+        preview.style.fontSize = size;
+        preview.style.fontWeight = weight;
+        preview.style.letterSpacing = spacing;
+        preview.setAttribute('data-text', preview.textContent);
+
+        // Reset styles
+        preview.className = '';
+        preview.style.background = '';
+        preview.style.webkitBackgroundClip = '';
+        preview.style.webkitTextFillColor = '';
+        preview.style.color = '';
+        preview.style.textShadow = '';
+        preview.style.filter = '';
+
+        // Apply effect
+        const effectClass = effect !== 'none' ? `name-${effect}` : '';
+        if (effectClass) preview.classList.add(effectClass);
+
+        // Set CSS custom properties for colors
+        preview.style.setProperty('--name-color-1', c1);
+        preview.style.setProperty('--name-color-2', c2);
+        if (effect === 'gradient') {
+            preview.style.background = `linear-gradient(${angle}deg, ${c1}, ${c2}, ${c3})`;
+            preview.style.webkitBackgroundClip = 'text';
+            preview.style.webkitTextFillColor = 'transparent';
+        }
+    }
+
+    // --- Decorations Section ---
+    function loadDecorations() {
+        renderDecoList();
+        document.getElementById('deco-form').onsubmit = (e) => {
+            e.preventDefault();
+            const deco = {
+                type: document.getElementById('deco-type').value,
+                content: document.getElementById('deco-content').value,
+                x: parseInt(document.getElementById('deco-x').value),
+                y: parseInt(document.getElementById('deco-y').value),
+                size: parseInt(document.getElementById('deco-size').value),
+                rotation: parseInt(document.getElementById('deco-rotation').value),
+                color: document.getElementById('deco-color').value,
+                opacity: parseFloat(document.getElementById('deco-opacity').value),
+                animation: document.getElementById('deco-anim').value
+            };
+            storage.addDecoration(deco);
+            showToast('تمت إضافة العنصر', 'success');
+            renderDecoList();
+            document.getElementById('deco-content').value = '';
+        };
+    }
+
+    function renderDecoList() {
+        const items = storage.getDecorations();
+        const container = document.getElementById('deco-list');
+        container.innerHTML = '';
+        items.forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'item-card';
+            let preview = '';
+            if (item.type === 'icon') preview = `<i class="${item.content}" style="color:${item.color};font-size:1.5rem;"></i>`;
+            else if (item.type === 'emoji') preview = `<span style="font-size:1.5rem;">${item.content}</span>`;
+            else if (item.type === 'text') preview = `<span style="color:${item.color};">${item.content}</span>`;
+            else if (item.type === 'image') preview = `<img src="${item.content}" style="width:30px;height:30px;object-fit:cover;border-radius:4px;">`;
+            
+            el.innerHTML = `
+                <div class="item-info">
+                    <div class="item-icon">${preview}</div>
+                    <div class="item-details">
+                        <h4>${item.type === 'icon' ? item.content : (item.content.substring(0, 30))}</h4>
+                        <p>X: ${item.x}% | Y: ${item.y}% | Size: ${item.size}px</p>
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="btn btn-icon btn-danger del-deco" data-id="${item.id}"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+            container.appendChild(el);
+        });
+        document.querySelectorAll('.del-deco').forEach(btn => {
+            btn.onclick = () => {
+                if (confirm('حذف العنصر؟')) {
+                    storage.deleteDecoration(btn.getAttribute('data-id'));
+                    renderDecoList();
+                    showToast('تم الحذف', 'info');
+                }
+            };
+        });
     }
 
     // --- Settings Section ---

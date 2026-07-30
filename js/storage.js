@@ -96,7 +96,22 @@ const defaultData = {
     particlesEnabled: true,
     scrollAnimations: true,
     customCSS: ''
-  }
+  },
+  nameStyle: {
+    font: 'Tajawal',
+    effect: 'gradient',
+    gradientColors: ['#7c3aed', '#a855f7', '#06b6d4'],
+    gradientAngle: 135,
+    fontSize: '2.5rem',
+    fontWeight: '800',
+    letterSpacing: '2px',
+    textTransform: 'none',
+    textShadowColor: 'rgba(124, 58, 237, 0.5)',
+    textShadowBlur: '20px',
+    animation: 'none',
+    customFont: ''
+  },
+  decorations: []
 };
 
 class AhmadStorage {
@@ -302,6 +317,35 @@ class AhmadStorage {
     this.data = JSON.parse(JSON.stringify(defaultData));
     this.save();
     localStorage.removeItem(AUTH_KEY);
+  }
+
+  /* ── Name Style ── */
+  getNameStyle() { return { ...this.data.nameStyle }; }
+  updateNameStyle(updates) {
+    Object.assign(this.data.nameStyle, updates);
+    this.save();
+  }
+
+  /* ── Decorations ── */
+  getDecorations() { return [...this.data.decorations]; }
+  addDecoration(item) {
+    item.id = this._generateId();
+    this.data.decorations.push(item);
+    this.save();
+    return item;
+  }
+  updateDecoration(id, updates) {
+    const item = this.data.decorations.find(d => d.id === id);
+    if (item) {
+      Object.assign(item, updates);
+      this.save();
+      return true;
+    }
+    return false;
+  }
+  deleteDecoration(id) {
+    this.data.decorations = this.data.decorations.filter(d => d.id !== id);
+    this.save();
   }
 
   /* ── All Data ── */

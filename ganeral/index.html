@@ -45,6 +45,12 @@
                 <a href="#" class="nav-item" data-target="sec-videos">
                     <i class="fas fa-video"></i> الفيديوهات
                 </a>
+                <a href="#" class="nav-item" data-target="sec-namestyle">
+                    <i class="fas fa-font"></i> تخصيص الاسم
+                </a>
+                <a href="#" class="nav-item" data-target="sec-decorations">
+                    <i class="fas fa-shapes"></i> العناصر الديكورية
+                </a>
                 <a href="#" class="nav-item" data-target="sec-background">
                     <i class="fas fa-palette"></i> الخلفية
                 </a>
@@ -157,6 +163,180 @@
                         <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> إضافة فيديو</button>
                     </form>
                     <div id="videos-list" class="item-list"></div>
+                </div>
+            </section>
+
+            <!-- Name Style Section -->
+            <section id="sec-namestyle" class="section">
+                <div class="section-header">
+                    <h2>تخصيص الاسم والخط</h2>
+                </div>
+                <div class="panel">
+                    <form id="namestyle-form">
+                        <div class="input-group">
+                            <label>الخط (Font Family)</label>
+                            <select id="ns-font">
+                                <option value="Tajawal">Tajawal (عربي)</option>
+                                <option value="Cairo">Cairo (عربي)</option>
+                                <option value="Amiri">Amiri (عربي كلاسيكي)</option>
+                                <option value="Almarai">Almarai (عربي عصري)</option>
+                                <option value="Inter">Inter (English)</option>
+                                <option value="Poppins">Poppins</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Playfair Display">Playfair Display</option>
+                                <option value="Righteous">Righteous</option>
+                                <option value="Permanent Marker">Permanent Marker</option>
+                                <option value="Pacifico">Pacifico</option>
+                                <option value="Rubik Glitch">Rubik Glitch</option>
+                                <option value="Bungee Shade">Bungee Shade</option>
+                                <option value="Orbitron">Orbitron (Sci-Fi)</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>تأثير الاسم (Text Effect)</label>
+                            <select id="ns-effect">
+                                <option value="gradient">تدرج لوني (Gradient)</option>
+                                <option value="neon">نيون متوهج (Neon)</option>
+                                <option value="blood">دموي أحمر (Blood)</option>
+                                <option value="fire">ناري (Fire)</option>
+                                <option value="metallic">معدني فضي (Metallic)</option>
+                                <option value="gold">ذهبي (Gold)</option>
+                                <option value="glitch">تشويش (Glitch)</option>
+                                <option value="rainbow">قوس قزح (Rainbow)</option>
+                                <option value="shadow">ظل عميق (3D Shadow)</option>
+                                <option value="ice">جليدي (Ice)</option>
+                                <option value="galaxy">مجرّي (Galaxy)</option>
+                                <option value="none">بدون تأثير</option>
+                            </select>
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>اللون الأول</label>
+                                <input type="color" id="ns-color1" value="#7c3aed">
+                            </div>
+                            <div class="input-group">
+                                <label>اللون الثاني</label>
+                                <input type="color" id="ns-color2" value="#a855f7">
+                            </div>
+                            <div class="input-group">
+                                <label>اللون الثالث</label>
+                                <input type="color" id="ns-color3" value="#06b6d4">
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>حجم الخط</label>
+                                <input type="text" id="ns-size" value="2.5rem" placeholder="2.5rem">
+                            </div>
+                            <div class="input-group">
+                                <label>وزن الخط (굵기)</label>
+                                <select id="ns-weight">
+                                    <option value="400">عادي (400)</option>
+                                    <option value="500">متوسط (500)</option>
+                                    <option value="600">شبه عريض (600)</option>
+                                    <option value="700">عريض (700)</option>
+                                    <option value="800" selected>أعرض (800)</option>
+                                    <option value="900">أعرض جداً (900)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>تباعد الأحرف</label>
+                                <input type="text" id="ns-spacing" value="2px" placeholder="2px">
+                            </div>
+                            <div class="input-group">
+                                <label>حركة النص</label>
+                                <select id="ns-animation">
+                                    <option value="none">بدون</option>
+                                    <option value="glow-pulse">نبض متوهج</option>
+                                    <option value="float">عائم</option>
+                                    <option value="bounce">قفز</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>زاوية التدرج (Gradient Angle)</label>
+                            <input type="range" id="ns-angle" min="0" max="360" value="135" style="width:100%;">
+                            <small id="ns-angle-val" style="color:var(--admin-text-secondary)">135°</small>
+                        </div>
+                        <div id="ns-preview" style="padding:2rem; text-align:center; background:rgba(0,0,0,0.3); border-radius:12px; margin:1rem 0; min-height:80px; display:flex; align-items:center; justify-content:center;">
+                            <span id="ns-preview-text" style="font-size:2.5rem; font-weight:800;">Ahmad</span>
+                        </div>
+                        <button type="submit" class="btn btn-save"><i class="fas fa-save"></i> حفظ تخصيص الاسم</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Decorations Section -->
+            <section id="sec-decorations" class="section">
+                <div class="section-header">
+                    <h2>العناصر الديكورية</h2>
+                    <p style="color:var(--admin-text-secondary); margin-top:0.5rem;">أضف أيقونات وصور وأشكال تزيينية تظهر على صفحتك</p>
+                </div>
+                <div class="panel">
+                    <form id="deco-form" style="margin-bottom:1.5rem;">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>نوع العنصر</label>
+                                <select id="deco-type">
+                                    <option value="icon">أيقونة (Font Awesome)</option>
+                                    <option value="emoji">إيموجي</option>
+                                    <option value="text">نص</option>
+                                    <option value="image">صورة (رابط)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>المحتوى</label>
+                                <input type="text" id="deco-content" placeholder="مثال: fas fa-star أو ⭐ أو رابط صورة">
+                                <small style="color:var(--admin-text-secondary); display:block; margin-top:5px;">
+                                    أيقونات: fas fa-star, fas fa-heart, fas fa-crown, fas fa-bolt, fas fa-fire, fas fa-gem, fas fa-moon, fas fa-sun
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>الموقع الأفقي (X %)</label>
+                                <input type="number" id="deco-x" min="0" max="100" value="50" placeholder="50">
+                            </div>
+                            <div class="input-group">
+                                <label>الموقع العمودي (Y %)</label>
+                                <input type="number" id="deco-y" min="0" max="100" value="50" placeholder="50">
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>الحجم (px)</label>
+                                <input type="number" id="deco-size" min="10" max="500" value="40">
+                            </div>
+                            <div class="input-group">
+                                <label>الدوران (°)</label>
+                                <input type="number" id="deco-rotation" min="-360" max="360" value="0">
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>اللون</label>
+                                <input type="color" id="deco-color" value="#a855f7">
+                            </div>
+                            <div class="input-group">
+                                <label>الشفافية (0-1)</label>
+                                <input type="number" id="deco-opacity" min="0" max="1" step="0.1" value="0.7">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>حركة</label>
+                            <select id="deco-anim">
+                                <option value="none">بدون</option>
+                                <option value="spin">دوران</option>
+                                <option value="pulse">نبض</option>
+                                <option value="float">عائم</option>
+                                <option value="twinkle">تلألؤ</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> إضافة عنصر</button>
+                    </form>
+                    <div id="deco-list" class="item-list"></div>
                 </div>
             </section>
 
