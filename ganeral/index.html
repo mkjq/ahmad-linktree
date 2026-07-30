@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmad - لوحة التحكم</title>
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h2>تسجيل الدخول</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-password">كلمة المرور</label>
+                    <input type="password" id="login-password" placeholder="أدخل كلمة المرور..." required>
+                    <i class="fas fa-eye eye-toggle" id="toggle-password"></i>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> دخول
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>لوحة التحكم</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-target="sec-profile">
+                    <i class="fas fa-user"></i> البروفايل
+                </a>
+                <a href="#" class="nav-item" data-target="sec-links">
+                    <i class="fas fa-link"></i> الروابط
+                </a>
+                <a href="#" class="nav-item" data-target="sec-gallery">
+                    <i class="fas fa-images"></i> المعرض
+                </a>
+                <a href="#" class="nav-item" data-target="sec-videos">
+                    <i class="fas fa-video"></i> الفيديوهات
+                </a>
+                <a href="#" class="nav-item" data-target="sec-background">
+                    <i class="fas fa-palette"></i> الخلفية
+                </a>
+                <a href="#" class="nav-item" data-target="sec-theme">
+                    <i class="fas fa-paint-brush"></i> الثيم
+                </a>
+                <a href="#" class="nav-item" data-target="sec-settings">
+                    <i class="fas fa-cog"></i> الإعدادات
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn btn-logout" id="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> خروج
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="mobile-nav-toggle" id="mobile-nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Profile Section -->
+            <section id="sec-profile" class="section active">
+                <div class="section-header">
+                    <h2>البروفايل الشخصي</h2>
+                </div>
+                <div class="panel">
+                    <form id="profile-form">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>الاسم بالانجليزية</label>
+                                <input type="text" id="prof-name">
+                            </div>
+                            <div class="input-group">
+                                <label>الاسم بالعربية</label>
+                                <input type="text" id="prof-nameAr">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>البايو (نبذة مختصرة)</label>
+                            <textarea id="prof-bio" rows="3"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>الصورة الشخصية</label>
+                            <div class="file-upload">
+                                <img id="avatar-preview" class="file-upload-preview" style="display:none;">
+                                <p><i class="fas fa-cloud-upload-alt"></i> اضغط لرفع صورة</p>
+                                <input type="file" id="prof-avatar-upload" accept="image/*">
+                            </div>
+                            <input type="hidden" id="prof-avatar-base64">
+                        </div>
+                        <div class="input-group" style="display:flex; align-items:center; gap:10px;">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="prof-showNameAr">
+                                <span class="slider"></span>
+                            </label>
+                            <span>إظهار الاسم العربي</span>
+                        </div>
+                        <button type="submit" class="btn btn-save"><i class="fas fa-save"></i> حفظ التغييرات</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Links Section -->
+            <section id="sec-links" class="section">
+                <div class="section-header">
+                    <h2>إدارة الروابط</h2>
+                </div>
+                <div class="panel">
+                    <button class="btn btn-primary" id="btn-add-link" style="margin-bottom: 1rem;">
+                        <i class="fas fa-plus"></i> إضافة رابط جديد
+                    </button>
+                    <div id="links-list" class="item-list"></div>
+                </div>
+            </section>
+
+            <!-- Gallery Section -->
+            <section id="sec-gallery" class="section">
+                <div class="section-header">
+                    <h2>معرض الصور</h2>
+                </div>
+                <div class="panel">
+                    <div class="file-upload" style="margin-bottom: 1.5rem;">
+                        <p><i class="fas fa-image"></i> رفع صورة جديدة</p>
+                        <input type="file" id="gallery-upload" accept="image/*">
+                    </div>
+                    <div id="gallery-grid" class="gallery-grid"></div>
+                </div>
+            </section>
+
+            <!-- Videos Section -->
+            <section id="sec-videos" class="section">
+                <div class="section-header">
+                    <h2>الفيديوهات</h2>
+                </div>
+                <div class="panel">
+                    <form id="video-form" style="margin-bottom: 1.5rem;">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>رابط الفيديو (يوتيوب أو مباشر)</label>
+                                <input type="url" id="video-url" required placeholder="https://youtube.com/...">
+                            </div>
+                            <div class="input-group">
+                                <label>عنوان الفيديو</label>
+                                <input type="text" id="video-title" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> إضافة فيديو</button>
+                    </form>
+                    <div id="videos-list" class="item-list"></div>
+                </div>
+            </section>
+
+            <!-- Background Section -->
+            <section id="sec-background" class="section">
+                <div class="section-header">
+                    <h2>الخلفية</h2>
+                </div>
+                <div class="panel">
+                    <form id="bg-form">
+                        <div class="input-group">
+                            <label>نوع الخلفية</label>
+                            <select id="bg-type">
+                                <option value="gradient">تدرج لوني (Gradient)</option>
+                                <option value="image">صورة</option>
+                                <option value="video">فيديو</option>
+                                <option value="color">لون ثابت</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>القيمة (رابط الصورة/الفيديو أو كود CSS)</label>
+                            <input type="text" id="bg-value" placeholder="مثال: linear-gradient(45deg, #000, #333)">
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>شفافية التعتيم (Overlay) 0-1</label>
+                                <input type="number" id="bg-overlay" step="0.1" min="0" max="1">
+                            </div>
+                            <div class="input-group">
+                                <label>الضبابية (Blur) px</label>
+                                <input type="number" id="bg-blur" step="1" min="0" max="50">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-save"><i class="fas fa-save"></i> حفظ الخلفية</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Theme Section -->
+            <section id="sec-theme" class="section">
+                <div class="section-header">
+                    <h2>الثيم والألوان</h2>
+                </div>
+                <div class="panel">
+                    <form id="theme-form">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>اللون الرئيسي</label>
+                                <input type="color" id="theme-primary">
+                            </div>
+                            <div class="input-group">
+                                <label>اللون الثانوي</label>
+                                <input type="color" id="theme-secondary">
+                            </div>
+                            <div class="input-group">
+                                <label>لون خلفية البطاقات</label>
+                                <input type="color" id="theme-bg">
+                            </div>
+                            <div class="input-group">
+                                <label>لون النصوص</label>
+                                <input type="color" id="theme-text">
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>انحناء الحواف (Border Radius) px</label>
+                                <input type="number" id="theme-radius" min="0" max="50">
+                            </div>
+                            <div class="input-group" style="display:flex; flex-direction:column; justify-content:center;">
+                                <label>تأثير التوهج (Glow Effect)</label>
+                                <label class="toggle-switch mt-2">
+                                    <input type="checkbox" id="theme-glow">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-save"><i class="fas fa-save"></i> حفظ الثيم</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="sec-settings" class="section">
+                <div class="section-header">
+                    <h2>الإعدادات المتقدمة</h2>
+                </div>
+                <div class="panel">
+                    <form id="settings-form">
+                        <h4 style="margin-bottom: 1rem;">إظهار / إخفاء الأقسام</h4>
+                        <div class="form-grid" style="margin-bottom: 1.5rem;">
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="set-show-links">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>الروابط</span>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="set-show-gallery">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>المعرض</span>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="set-show-videos">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>الفيديوهات</span>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-bottom: 1rem;">تأثيرات</h4>
+                        <div class="form-grid" style="margin-bottom: 1.5rem;">
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="set-particles">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>جزيئات متحركة (Particles)</span>
+                            </div>
+                            <div style="display:flex; gap:10px; align-items:center;">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="set-scroll">
+                                    <span class="slider"></span>
+                                </label>
+                                <span>تأثيرات التمرير (Scroll Animations)</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>CSS مخصص</label>
+                            <textarea id="set-css" rows="4" dir="ltr" placeholder="/* اكتب كود CSS هنا */"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-save"><i class="fas fa-save"></i> حفظ الإعدادات</button>
+                    </form>
+                </div>
+                
+                <div class="panel">
+                    <h4 style="margin-bottom: 1rem;">بيانات الموقع</h4>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" id="btn-export"><i class="fas fa-download"></i> تصدير البيانات (نسخة احتياطية)</button>
+                        <button class="btn btn-danger" id="btn-reset"><i class="fas fa-trash-restore"></i> إعادة ضبط المصنع</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="link-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close"><i class="fas fa-times"></i></button>
+            <h3 style="margin-bottom: 1.5rem;">إضافة/تعديل رابط</h3>
+            <form id="link-form">
+                <input type="hidden" id="link-id">
+                <div class="input-group">
+                    <label>عنوان الرابط</label>
+                    <input type="text" id="link-title" required>
+                </div>
+                <div class="input-group">
+                    <label>الرابط (URL)</label>
+                    <input type="url" id="link-url" required dir="ltr">
+                </div>
+                <div class="input-group">
+                    <label>كود الأيقونة (Font Awesome)</label>
+                    <input type="text" id="link-icon" placeholder="مثال: fab fa-instagram" dir="ltr">
+                    <small style="color: var(--admin-text-secondary); display:block; margin-top:5px;">
+                        أمثلة: fab fa-instagram, fab fa-x-twitter, fab fa-youtube, fab fa-whatsapp, fas fa-globe
+                    </small>
+                </div>
+                <div class="input-group">
+                    <label>لون الأيقونة</label>
+                    <input type="color" id="link-color" value="#ffffff">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">حفظ</button>
+                    <button type="button" class="btn btn-outline modal-cancel" style="flex: 1;">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
