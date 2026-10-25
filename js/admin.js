@@ -7,8 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const togglePassword = document.getElementById('toggle-password');
     const logoutBtn = document.getElementById('btn-logout');
 
+    const MIN_PASSWORD = 8;
+    const setupMode = () => !storage.hasPassword();
+
     // Check auth status on load
-    if (storage.isAuthenticated()) {
+    if (storage.isAuthenticated() && !setupMode()) {
         showDashboard();
     } else {
         showLogin();
@@ -22,10 +25,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Login Form Submit
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const pwd = passwordInput.value;
-        if (storage.checkPassword(pwd)) {
+        if (setupMode()) {
+            // First visit: the owner chooses the dashboard password (only its salted hash is stored).
+            if (pwd.length < MIN_PASSWORD) {
+                showToast(`كلمة المرور يجب أن تكون ${MIN_PASSWORD} أحرف على الأقل`, 'error');
+                return;
+            }
+            await storage.setPassword(pwd);
+            storage.createSession();
+            showDashboard();
+            showToast('تم إنشاء كلمة المرور وتسجيل الدخول', 'success');
+            return;
+        }
+        if (await storage.checkPassword(pwd)) {
             storage.createSession();
             showDashboard();
             showToast('تم تسجيل الدخول بنجاح', 'success');
@@ -49,6 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
         loginScreen.style.display = 'flex';
         dashboard.style.display = 'none';
         passwordInput.value = '';
+        const setup = setupMode();
+        loginScreen.querySelector('h2').textContent = setup ? 'إنشاء كلمة مرور للوحة التحكم' : 'تسجيل الدخول';
+        passwordInput.placeholder = setup ? `اختر كلمة مرور (${MIN_PASSWORD} أحرف على الأقل)...` : 'أدخل كلمة المرور...';
+        passwordInput.autocomplete = setup ? 'new-password' : 'current-password';
     }
 
     function showDashboard() {

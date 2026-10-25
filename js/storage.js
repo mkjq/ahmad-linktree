@@ -91,7 +91,8 @@ const defaultData = {
     videosTitle: '🎬 فيديوهات'
   },
   settings: {
-    password: 'ahmad2026',
+    passwordHash: '',   // salted SHA-256, set by the owner on first login
+    passwordSalt: '',
     sessionDuration: 86400000,
     particlesEnabled: true,
     scrollAnimations: true,
@@ -134,6 +135,10 @@ class AhmadStorage {
 
   _mergeDefaults(saved) {
     const merged = JSON.parse(JSON.stringify(defaultData));
+    if (saved.settings && 'password' in saved.settings) {
+      saved = { ...saved, settings: { ...saved.settings } };
+      delete saved.settings.password;
+    }
     for (const key in saved) {
       if (key in merged) {
         if (Array.isArray(saved[key])) {
@@ -277,8 +282,23 @@ class AhmadStorage {
   }
 
   /* ── Authentication ── */
-  checkPassword(input) {
-    return input === this.data.settings.password;
+  async _hash(password, salt) {
+    const bytes = new TextEncoder().encode(salt + ':' + password);
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
+  }
+  hasPassword() {
+    return Boolean(this.data.settings.passwordHash);
+  }
+  async setPassword(password) {
+    const salt = Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
+    this.data.settings.passwordSalt = salt;
+    this.data.settings.passwordHash = await this._hash(password, salt);
+    this.save();
+  }
+  async checkPassword(input) {
+    if (!this.hasPassword()) return false;
+    return (await this._hash(input, this.data.settings.passwordSalt)) === this.data.settings.passwordHash;
   }
   createSession() {
     const expiry = Date.now() + this.data.settings.sessionDuration;
